@@ -75,11 +75,10 @@ export class WSApi {
     }
     
     resolvePacket(packet: IWSApiResponse | IWSApiResponseInvasive) {
-        // console.log('resolving', packet);
-        
         let id = this.invasive ? (<IWSApiResponseInvasive>packet)._wsapiId : packet.id;
         let promise = this.handles.get(id);
-    
+        this.handles.delete(id);
+        
         let status = this.invasive ? (<IWSApiResponseInvasive>packet)._wsapiStatus : packet.status;
         if (status === WSApiStatus.RESOLVED) {
             promise[0](this.invasive ? packet : packet.data);
